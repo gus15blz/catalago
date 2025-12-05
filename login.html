@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login - Origem Natural</title>
+</head>
+<body>
+    <header>
+        <p id="titulo">Origem Natural</p>
+    </header>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h2 class="login-title">Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="seu@email.com"
+                        autocomplete="email"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input 
+                        type="password" 
+                        id="senha" 
+                        name="senha" 
+                        required 
+                        placeholder="Digite sua senha"
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn-login" id="btnLogin">
+                        Entrar
+                    </button>
+                </div>
+
+                <div id="mensagemErro" class="mensagem-erro" style="display: none;"></div>
+            </form>
+
+            <div class="login-footer">
+                <p>Não tem uma conta? <a href="#" id="linkCadastro">Cadastre-se</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
+
