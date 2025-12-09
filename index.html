@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <title>Origem Natural</title>
 </head>
 <body>
     <header>
         <p id="titulo">Origem Natural</p>
         <div class="header-actions">
+            <button class="btn-header btn-carrinho" id="btnCarrinho" title="Carrinho">
+                Carrinho <span id="carrinhoCount" class="badge-carrinho">0</span>
+            </button>
             <a href="login.html" class="btn-header" id="btnLoginHeader">Login</a>
             <a href="perfil.html" class="btn-header btn-perfil" id="btnPerfil" style="display: none;" title="Perfil">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

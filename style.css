@@ -64,6 +64,23 @@ header {
     display: block;
 }
 
+.btn-carrinho {
+    position: relative;
+}
+
+.badge-carrinho {
+    background: #ff9800;
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 8px;
+    display: inline-block;
+    min-width: 24px;
+    text-align: center;
+}
+
 .btn-header:hover {
     background: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.5);
@@ -198,9 +215,12 @@ header {
     border-radius: 12px;
     width: 90%;
     max-width: 400px;
+    max-height: 90vh;
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     animation: slideUp 0.3s ease-out;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .popup-header {
@@ -241,6 +261,9 @@ header {
 .popup-body {
     padding: 25px;
     text-align: center;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(90vh - 140px);
 }
 
 .popup-produto-nome {
@@ -342,6 +365,240 @@ header {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Carrinho */
+.carrinho-lista {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.carrinho-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.carrinho-item-info {
+    flex: 1;
+}
+
+.carrinho-item-nome {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.carrinho-item-preco {
+    color: #228B22;
+    font-weight: 700;
+}
+
+.carrinho-controles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-quantidade {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input-quantidade-lista {
+    width: 50px;
+    text-align: center;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.btn-remover-item {
+    background: none;
+    border: none;
+    color: #f44336;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.carrinho-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 10px 0 15px 0;
+}
+
+.btn-finalizar {
+    width: 100%;
+    padding: 12px;
+    background: #228B22;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-finalizar:hover {
+    background: #1e7a1e;
+    transform: translateY(-2px);
+}
+
+/* Notificação de produto adicionado */
+.notificacao-carrinho {
+    position: fixed;
+    top: 130px;
+    right: 20px;
+    background: #4caf50;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    font-weight: 600;
+    z-index: 2000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease-out;
+    max-width: 300px;
+}
+
+.notificacao-carrinho.mostrar {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(400px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Métodos de Pagamento */
+.popup-total-pagamento {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #228B22;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f0f8f0;
+    border-radius: 8px;
+}
+
+.metodos-pagamento {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.metodo-pagamento-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+}
+
+.metodo-pagamento-item:hover {
+    border-color: #228B22;
+    background: #f0f8f0;
+}
+
+.metodo-pagamento-item input[type="radio"] {
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #228B22;
+}
+
+.metodo-pagamento-item input[type="radio"]:checked + .metodo-pagamento-label {
+    color: #228B22;
+    font-weight: 600;
+}
+
+.metodo-pagamento-item:has(input[type="radio"]:checked) {
+    border-color: #228B22;
+    background: #f0f8f0;
+}
+
+.metodo-pagamento-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    font-size: 16px;
+}
+
+.metodo-icone {
+    font-size: 24px;
+}
+
+/* Área do QR Code PIX */
+.area-qrcode {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 2px solid #228B22;
+    text-align: center;
+}
+
+.qrcode-titulo {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.qrcode-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+.qrcode-container canvas {
+    border-radius: 8px;
+}
+
+.qrcode-valor {
+    font-size: 20px;
+    font-weight: 700;
+    color: #228B22;
+    margin: 10px 0;
+}
+
+.qrcode-chave {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0;
+    word-break: break-all;
+    padding: 0 10px;
 }
 
 /* Área de Login */
