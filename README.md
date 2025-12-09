@@ -43,16 +43,18 @@ catalago/
 
 ## 🔌 Integração com API
 
-O projeto está configurado para buscar produtos da API em `https://localhost:7223/api/Produto`.
+<!-- API desabilitada - URLs removidas -->
+<!-- O projeto estava configurado para buscar produtos da API em `https://localhost:7223/api/Produto`. -->
 
 ### Configuração da API
 
-A URL da API pode ser alterada no arquivo `script.js`:
-
+<!-- A URL da API pode ser alterada no arquivo `script.js`: -->
+<!-- 
 ```javascript
-const API_BASE_URL = 'https://localhost:7223/api';
-const API_PRODUTOS_URL = `${API_BASE_URL}/Produto`;
+// const API_BASE_URL = 'https://localhost:7223/api';
+// const API_PRODUTOS_URL = `${API_BASE_URL}/Produto`;
 ```
+-->
 
 ### Funcionalidades
 

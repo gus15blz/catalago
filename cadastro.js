@@ -3,42 +3,47 @@ const API_BASE_URL = 'https://localhost:7223';
 const API_CLIENTE_URL = `${API_BASE_URL}/api/Cliente`;
 
 // Elementos do formulário
-const loginForm = document.getElementById('loginForm');
+const cadastroForm = document.getElementById('cadastroForm');
+const nomeInput = document.getElementById('nome');
 const emailInput = document.getElementById('email');
 const senhaInput = document.getElementById('senha');
-const btnLogin = document.getElementById('btnLogin');
+const confirmarSenhaInput = document.getElementById('confirmarSenha');
+const btnCadastro = document.getElementById('btnCadastro');
 const mensagemErro = document.getElementById('mensagemErro');
-const linkCadastro = document.getElementById('linkCadastro');
 
-/**
- * Exibe mensagem de erro
- */
 function mostrarErro(mensagem) {
     mensagemErro.textContent = mensagem;
     mensagemErro.style.display = 'block';
     mensagemErro.className = 'mensagem-erro';
     
-    // Remove a mensagem após 5 segundos
     setTimeout(() => {
         mensagemErro.style.display = 'none';
     }, 5000);
 }
 
-/**
- * Exibe mensagem de sucesso
- */
 function mostrarSucesso(mensagem) {
     mensagemErro.textContent = mensagem;
     mensagemErro.style.display = 'block';
     mensagemErro.className = 'mensagem-sucesso';
 }
 
-/**
- * Valida o formulário antes de enviar
- */
 function validarFormulario() {
+    const nome = nomeInput.value.trim();
     const email = emailInput.value.trim();
     const senha = senhaInput.value;
+    const confirmarSenha = confirmarSenhaInput.value;
+
+    if (!nome) {
+        mostrarErro('Por favor, digite seu nome completo.');
+        nomeInput.focus();
+        return false;
+    }
+
+    if (nome.length < 3) {
+        mostrarErro('O nome deve ter pelo menos 3 caracteres.');
+        nomeInput.focus();
+        return false;
+    }
 
     if (!email) {
         mostrarErro('Por favor, digite seu email.');
@@ -64,14 +69,16 @@ function validarFormulario() {
         return false;
     }
 
+    if (senha !== confirmarSenha) {
+        mostrarErro('As senhas não coincidem. Por favor, verifique.');
+        confirmarSenhaInput.focus();
+        return false;
+    }
+
     return true;
 }
 
-/**
- * Realiza o login na API
- */
-async function fazerLogin(email, senha) {
-    // Faz POST para autenticar com email e senha
+async function fazerCadastro(nome, email, senha) {
     const response = await fetch(API_CLIENTE_URL, {
         method: 'POST',
         headers: {
@@ -79,6 +86,7 @@ async function fazerLogin(email, senha) {
             'Accept': 'application/json'
         },
         body: JSON.stringify({
+            nome: nome,
             email: email,
             senha: senha
         }),
@@ -86,88 +94,56 @@ async function fazerLogin(email, senha) {
     });
 
     if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-            throw new Error('Credenciais inválidas. Verifique seu email e senha.');
-        }
-        if (response.status === 404) {
-            throw new Error('Usuário não encontrado. Verifique seu email.');
-        }
-        const errorData = await response.json().catch(() => ({ message: 'Erro ao fazer login' }));
+        const errorData = await response.json().catch(() => ({ message: 'Erro ao fazer cadastro' }));
         throw new Error(errorData.message || `Erro ${response.status}: ${response.statusText}`);
     }
 
     const data = await response.json();
-    
-    // Salva dados do usuário
-    localStorage.setItem('userEmail', email);
 
-    if (data.usuario || data.cliente) {
-        localStorage.setItem('userData', JSON.stringify(data.usuario || data.cliente));
-    } else if (data) {
-        localStorage.setItem('userData', JSON.stringify(data));
-    }
-
-    mostrarSucesso('Login realizado com sucesso! Redirecionando...');
+    mostrarSucesso('Cadastro realizado com sucesso! Redirecionando para login...');
 
     setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 1000);
+        window.location.href = 'login.html';
+    }, 2000);
 }
 
-/**
- * Manipula o envio do formulário
- */
-loginForm.addEventListener('submit', async (e) => {
+cadastroForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Esconde mensagens anteriores
     mensagemErro.style.display = 'none';
 
-    // Valida o formulário
     if (!validarFormulario()) {
         return;
     }
 
+    const nome = nomeInput.value.trim();
     const email = emailInput.value.trim();
     const senha = senhaInput.value;
 
-    // Desabilita o botão durante o login
-    btnLogin.disabled = true;
-    btnLogin.textContent = 'Entrando...';
+    btnCadastro.disabled = true;
+    btnCadastro.textContent = 'Cadastrando...';
 
     try {
-        await fazerLogin(email, senha);
+        await fazerCadastro(nome, email, senha);
     } catch (error) {
-        mostrarErro(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
+        mostrarErro(error.message || 'Erro ao fazer cadastro. Tente novamente.');
     } finally {
-        btnLogin.disabled = false;
-        btnLogin.textContent = 'Entrar';
+        btnCadastro.disabled = false;
+        btnCadastro.textContent = 'Cadastrar';
     }
 });
 
-/**
- * Link para cadastro
- */
-linkCadastro.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = 'cadastro.html';
-});
-
-/**
- * Verifica se o usuário já está logado
- */
 function verificarLogin() {
     const userEmail = localStorage.getItem('userEmail');
     if (userEmail) {
-        // Se já está logado, redireciona para a página principal
         window.location.href = 'index.html';
     }
 }
 
-// Botão para mostrar/ocultar senha
 document.addEventListener('DOMContentLoaded', () => {
     verificarLogin();
     
+    // Botão para mostrar/ocultar senha
     const btnMostrarSenha = document.getElementById('btnMostrarSenha');
     const senhaInput = document.getElementById('senha');
     const iconeSenha = document.getElementById('iconeSenha');
@@ -183,6 +159,29 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 senhaInput.type = 'password';
                 iconeSenha.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            }
+        });
+    }
+    
+    // Botão para mostrar/ocultar confirmar senha
+    const btnMostrarConfirmarSenha = document.getElementById('btnMostrarConfirmarSenha');
+    const confirmarSenhaInput = document.getElementById('confirmarSenha');
+    const iconeConfirmarSenha = document.getElementById('iconeConfirmarSenha');
+    
+    if (btnMostrarConfirmarSenha && confirmarSenhaInput) {
+        btnMostrarConfirmarSenha.addEventListener('click', () => {
+            if (confirmarSenhaInput.type === 'password') {
+                confirmarSenhaInput.type = 'text';
+                iconeConfirmarSenha.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                `;
+            } else {
+                confirmarSenhaInput.type = 'password';
+                iconeConfirmarSenha.innerHTML = `
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                 `;
